@@ -1,0 +1,353 @@
+/*
+ * Base and document styles. The reset lives in a cascade layer so that
+ * component styles (and yours) win over it without specificity fights.
+ */
+@layer oe-base {
+  .oe-root,
+  .oe-root *,
+  .oe-root *::before,
+  .oe-root *::after {
+    box-sizing: border-box;
+  }
+
+  .oe-root :where(button, input) {
+    margin: 0;
+    font: inherit;
+    color: inherit;
+  }
+
+  .oe-root :where(button) {
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  .oe-root :where(button:disabled) {
+    cursor: default;
+  }
+}
+
+.oe-root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--oe-bg);
+  color: var(--oe-fg);
+  font-family: var(--oe-font);
+  font-size: var(--oe-font-size);
+  line-height: var(--oe-line-height);
+}
+
+.oe-content {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.oe-content .tiptap {
+  max-width: var(--oe-content-width);
+  min-height: 240px;
+  margin: 0 auto;
+  padding: var(--oe-content-padding);
+  outline: none;
+  caret-color: var(--oe-accent);
+}
+
+.oe-content .tiptap ::selection {
+  background: var(--oe-selection);
+}
+
+.oe-content .tiptap .oe-selection {
+  background: var(--oe-selection);
+}
+
+.oe-content .tiptap > :first-child {
+  margin-top: 0;
+}
+
+.oe-content .tiptap > :last-child {
+  margin-bottom: 0;
+}
+
+/* Text */
+.oe-content .tiptap p {
+  margin: 0.85em 0;
+}
+
+.oe-content .tiptap :is(h1, h2, h3, h4, h5, h6) {
+  margin: 1.6em 0 0.5em;
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: -0.011em;
+}
+
+.oe-content .tiptap h1 {
+  font-size: 1.6em;
+}
+
+.oe-content .tiptap h2 {
+  font-size: 1.3em;
+}
+
+.oe-content .tiptap h3 {
+  font-size: 1.12em;
+}
+
+.oe-content .tiptap a {
+  color: var(--oe-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.oe-content .tiptap mark {
+  padding: 0.05em 0.1em;
+  border-radius: 3px;
+  background: var(--oe-highlight);
+  color: inherit;
+}
+
+.oe-content .tiptap hr {
+  margin: 2em 0;
+  border: 0;
+  border-top: 1px solid var(--oe-border);
+}
+
+.oe-content .tiptap hr.ProseMirror-selectednode {
+  border-top-color: var(--oe-accent);
+}
+
+/* Lists */
+.oe-content .tiptap :is(ul, ol) {
+  margin: 0.85em 0;
+  padding-left: 1.5em;
+}
+
+.oe-content .tiptap li p {
+  margin: 0.25em 0;
+}
+
+.oe-content .tiptap ul[data-type="taskList"] {
+  padding-left: 0.15em;
+  list-style: none;
+}
+
+.oe-content .tiptap ul[data-type="taskList"] > li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55em;
+}
+
+.oe-content .tiptap ul[data-type="taskList"] > li > label {
+  display: flex;
+  flex: none;
+  align-items: center;
+  /* One line tall, so the checkbox centres on the first line of text. */
+  height: calc(1em * var(--oe-line-height));
+  margin-top: 0.25em;
+  user-select: none;
+}
+
+.oe-content .tiptap ul[data-type="taskList"] > li > label input {
+  width: 1em;
+  height: 1em;
+  margin: 0;
+  accent-color: var(--oe-accent);
+  cursor: pointer;
+}
+
+.oe-content .tiptap ul[data-type="taskList"] > li > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.oe-content .tiptap ul[data-type="taskList"] > li[data-checked="true"] > div > p {
+  color: var(--oe-muted);
+}
+
+/* Quote and code */
+.oe-content .tiptap blockquote {
+  margin: 1.1em 0;
+  padding: 0.1em 0 0.1em 1em;
+  border-left: 3px solid var(--oe-quote-bar);
+}
+
+.oe-content .tiptap code {
+  padding: 0.12em 0.36em;
+  border: 1px solid var(--oe-border);
+  border-radius: 5px;
+  background: var(--oe-code-bg);
+  color: var(--oe-code-fg);
+  font-family: var(--oe-font-mono);
+  font-size: 0.86em;
+}
+
+.oe-content .tiptap pre {
+  margin: 1.1em 0;
+  padding: 14px 16px;
+  border: 1px solid var(--oe-border);
+  border-radius: var(--oe-radius);
+  background: var(--oe-code-bg);
+  overflow-x: auto;
+  line-height: 1.55;
+}
+
+.oe-content .tiptap pre code {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 0.86em;
+}
+
+/* Placeholder */
+.oe-content .tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  color: var(--oe-faint);
+  pointer-events: none;
+}
+
+/* Images */
+.oe-content .tiptap img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--oe-radius);
+}
+
+.oe-content .tiptap [data-resize-container] {
+  max-width: 100%;
+  margin: 1.2em 0;
+}
+
+.oe-content .tiptap img.ProseMirror-selectednode,
+.oe-content .tiptap [data-resize-container].ProseMirror-selectednode [data-resize-wrapper] {
+  border-radius: var(--oe-radius);
+  outline: 2px solid var(--oe-accent);
+  outline-offset: 2px;
+}
+
+.oe-content .tiptap [data-resize-handle] {
+  z-index: 1;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--oe-accent);
+  border-radius: 50%;
+  background: var(--oe-bg);
+}
+
+.oe-content .tiptap [data-resize-handle="top-left"] {
+  top: -5px;
+  left: -5px;
+  cursor: nwse-resize;
+}
+
+.oe-content .tiptap [data-resize-handle="top-right"] {
+  top: -5px;
+  right: -5px;
+  cursor: nesw-resize;
+}
+
+.oe-content .tiptap [data-resize-handle="bottom-left"] {
+  bottom: -5px;
+  left: -5px;
+  cursor: nesw-resize;
+}
+
+.oe-content .tiptap [data-resize-handle="bottom-right"] {
+  right: -5px;
+  bottom: -5px;
+  cursor: nwse-resize;
+}
+
+/* Tables */
+.oe-content .tiptap .tableWrapper {
+  margin: 1.3em 0;
+  overflow-x: auto;
+}
+
+.oe-content .tiptap table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.95em;
+}
+
+.oe-content .tiptap :is(td, th) {
+  position: relative;
+  min-width: 3em;
+  padding: 7px 10px;
+  border: 1px solid var(--oe-border-strong);
+  vertical-align: top;
+  text-align: left;
+}
+
+.oe-content .tiptap th {
+  background: var(--oe-code-bg);
+  font-weight: 600;
+}
+
+.oe-content .tiptap :is(td, th) > p {
+  margin: 0;
+}
+
+.oe-content .tiptap .selectedCell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--oe-accent);
+  opacity: 0.14;
+  pointer-events: none;
+}
+
+.oe-content .tiptap .column-resize-handle {
+  position: absolute;
+  top: 0;
+  right: -2px;
+  bottom: -1px;
+  width: 3px;
+  background: var(--oe-accent);
+  pointer-events: none;
+}
+
+.oe-content .tiptap.resize-cursor {
+  cursor: col-resize;
+}
+
+/* Cursor helpers */
+.oe-content .tiptap .ProseMirror-gapcursor::after {
+  border-top-color: var(--oe-fg);
+}
+
+/* Collaboration: other people's cursors and selections */
+.oe-content .tiptap .oe-caret {
+  position: relative;
+  margin: 0 -1px;
+  border-left: 2px solid var(--oe-caret-color);
+  pointer-events: none;
+  word-break: normal;
+}
+
+.oe-content .tiptap .oe-caret-label {
+  position: absolute;
+  top: -1.45em;
+  left: -2px;
+  padding: 1px 6px;
+  border-radius: 4px 4px 4px 0;
+  background: var(--oe-caret-color);
+  color: #ffffff;
+  font-family: var(--oe-font);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.45;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.oe-content .tiptap .oe-caret-selection {
+  background: color-mix(in srgb, var(--oe-caret-color) 28%, transparent);
+}

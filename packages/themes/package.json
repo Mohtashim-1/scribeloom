@@ -1,0 +1,18 @@
+{
+  "name": "@openedit/themes",
+  "version": "0.0.0",
+  "description": "CSS variable tokens, light and dark presets, and document styles for OpenEdit.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    "./styles.css": "./src/styles.css",
+    "./tokens.css": "./src/tokens.css",
+    "./content.css": "./src/content.css"
+  },
+  "files": [
+    "src"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@openedit/e2e",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Browser tests for OpenEdit, run against the playground and the collaboration server.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "@types/node": "^20.19.43",
+    "typescript": "~5.9.3"
+  }
+}

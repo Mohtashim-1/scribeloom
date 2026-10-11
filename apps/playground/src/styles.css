@@ -1,0 +1,224 @@
+/* Page chrome for the playground. The editor itself is styled by @openedit/ui/styles.css. */
+:root {
+  color-scheme: light dark;
+  --page-bg: #f4f4f2;
+  --page-fg: #1c1c21;
+  --page-muted: #6e6e7a;
+  --page-border: #e2e2e0;
+  --page-card: #ffffff;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page-bg: #08080a;
+    --page-fg: #ececf1;
+    --page-muted: #9c9ca8;
+    --page-border: #232329;
+    --page-card: #0f0f12;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page-bg: #08080a;
+  --page-fg: #ececf1;
+  --page-muted: #9c9ca8;
+  --page-border: #232329;
+  --page-card: #0f0f12;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--page-bg);
+  color: var(--page-fg);
+}
+
+.page {
+  max-width: 992px;
+  margin: 0 auto;
+  padding: 40px 16px 64px;
+}
+
+.page-header {
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  letter-spacing: -0.02em;
+}
+
+.page-header p {
+  margin: 6px 0 0;
+  color: var(--page-muted);
+}
+
+.tabs {
+  display: flex;
+  gap: 2px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 14px;
+  padding: 3px;
+  border: 1px solid var(--page-border);
+  border-radius: 10px;
+  background: var(--page-card);
+  overflow-x: auto;
+}
+
+.tabs button {
+  padding: 5px 12px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--page-muted);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tabs button:hover {
+  color: var(--page-fg);
+}
+
+.tabs button[aria-selected="true"] {
+  background: var(--page-bg);
+  color: var(--page-fg);
+}
+
+.tabs button:focus-visible {
+  outline: 2px solid #5b4fe8;
+  outline-offset: 1px;
+}
+
+.card {
+  border: 1px solid var(--page-border);
+  border-radius: 16px;
+  background: var(--page-card);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+  overflow: hidden;
+}
+
+/* The editor scrolls inside the card, so its toolbar stays in view. */
+.card .oe-root {
+  height: min(680px, calc(100vh - 260px));
+  min-height: 420px;
+  overflow-y: auto;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 14px;
+}
+
+.split .oe-root {
+  --oe-content-padding: 28px 22px 40px;
+}
+
+.note {
+  margin: 14px 2px 0;
+  color: var(--page-muted);
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.note code {
+  padding: 0.1em 0.35em;
+  border: 1px solid var(--page-border);
+  border-radius: 5px;
+  font-size: 0.92em;
+}
+
+/* Custom toolbars in the demos. */
+.demo-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex: none;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--oe-border);
+  background: var(--oe-bg);
+}
+
+.demo-bar-spacer {
+  flex: 1;
+}
+
+/* Level 1 customization: override tokens for one editor. */
+.brand {
+  --oe-accent: #0f766e;
+  --oe-active: #d9f2ee;
+  --oe-selection: #c5ebe5;
+  --oe-highlight: #ffe2b8;
+  --oe-quote-bar: #0f766e;
+  --oe-radius: 3px;
+  --oe-font: Georgia, "Times New Roman", serif;
+  --oe-font-size: 16.5px;
+  --oe-content-width: 600px;
+}
+
+.brand[data-oe-theme="dark"] {
+  --oe-accent: #5eead4;
+  --oe-active: #123f3a;
+  --oe-selection: #17504a;
+  --oe-highlight: #6b4a12;
+  --oe-quote-bar: #5eead4;
+}
+
+.page-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px 20px;
+  margin-top: 14px;
+  color: var(--page-muted);
+  font-size: 0.85rem;
+}
+
+.page-footer label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.page-footer details {
+  flex: 1;
+  min-width: 240px;
+}
+
+.page-footer summary {
+  cursor: pointer;
+}
+
+.page-footer pre {
+  max-height: 220px;
+  margin: 8px 0 0;
+  padding: 12px 14px;
+  border: 1px solid var(--page-border);
+  border-radius: 10px;
+  background: var(--page-card);
+  overflow: auto;
+  font-size: 0.78rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}

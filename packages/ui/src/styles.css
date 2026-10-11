@@ -1,0 +1,32 @@
+/*
+ * Entry for the compiled stylesheet (`@openedit/ui/styles.css`): design
+ * tokens and document styles from @openedit/themes, plus the utility classes
+ * the components use. Tailwind's preflight reset is left out on purpose, so
+ * importing this file does not restyle the host page.
+ */
+@layer theme, oe-base, components, utilities;
+
+@import "@openedit/themes/styles.css";
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@source "./";
+
+/* Maps the OpenEdit tokens to utilities such as `bg-oe-surface` and `text-oe-muted`. */
+@theme inline {
+  --color-oe-bg: var(--oe-bg);
+  --color-oe-surface: var(--oe-surface);
+  --color-oe-hover: var(--oe-hover);
+  --color-oe-active: var(--oe-active);
+  --color-oe-fg: var(--oe-fg);
+  --color-oe-muted: var(--oe-muted);
+  --color-oe-faint: var(--oe-faint);
+  --color-oe-border: var(--oe-border);
+  --color-oe-border-strong: var(--oe-border-strong);
+  --color-oe-accent: var(--oe-accent);
+  --color-oe-accent-fg: var(--oe-accent-fg);
+  --radius-oe: var(--oe-radius);
+  --shadow-oe: var(--oe-shadow);
+  --font-oe: var(--oe-font);
+  --font-oe-mono: var(--oe-font-mono);
+}

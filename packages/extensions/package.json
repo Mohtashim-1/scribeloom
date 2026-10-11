@@ -1,0 +1,92 @@
+{
+  "name": "@openedit/extensions",
+  "version": "0.0.0",
+  "description": "Open extensions for OpenEdit: tables, images, the slash menu and real-time collaboration.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./tables": {
+      "import": {
+        "types": "./dist/tables.d.ts",
+        "default": "./dist/tables.js"
+      },
+      "require": {
+        "types": "./dist/tables.d.cts",
+        "default": "./dist/tables.cjs"
+      }
+    },
+    "./images": {
+      "import": {
+        "types": "./dist/images.d.ts",
+        "default": "./dist/images.js"
+      },
+      "require": {
+        "types": "./dist/images.d.cts",
+        "default": "./dist/images.cjs"
+      }
+    },
+    "./slash-menu": {
+      "import": {
+        "types": "./dist/slash-menu.d.ts",
+        "default": "./dist/slash-menu.js"
+      },
+      "require": {
+        "types": "./dist/slash-menu.d.cts",
+        "default": "./dist/slash-menu.cjs"
+      }
+    },
+    "./collab": {
+      "import": {
+        "types": "./dist/collab.d.ts",
+        "default": "./dist/collab.js"
+      },
+      "require": {
+        "types": "./dist/collab.d.cts",
+        "default": "./dist/collab.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hocuspocus/provider": "3.4.4",
+    "@openedit/core": "workspace:*",
+    "@tiptap/core": "3.31.4",
+    "@tiptap/extension-collaboration": "3.31.4",
+    "@tiptap/extension-collaboration-caret": "3.31.4",
+    "@tiptap/extension-image": "3.31.4",
+    "@tiptap/extension-table": "3.31.4",
+    "@tiptap/pm": "3.31.4",
+    "@tiptap/suggestion": "3.31.4",
+    "@tiptap/y-tiptap": "^3.0.9",
+    "y-indexeddb": "^9.0.12",
+    "y-protocols": "^1.0.7",
+    "yjs": "^13.6.33"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1",
+    "tsup": "^8.5.1",
+    "typescript": "~5.9.3",
+    "vitest": "^5.0.3"
+  }
+}

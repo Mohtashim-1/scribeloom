@@ -1,0 +1,73 @@
+/*
+ * OpenEdit design tokens. Override any of these on `.oe-root` (or an ancestor)
+ * to restyle the editor: this is customization level 1.
+ */
+.oe-root {
+  color-scheme: light;
+
+  /* Surfaces */
+  --oe-bg: #ffffff;
+  --oe-surface: #ffffff;
+  --oe-hover: #f1f1f3;
+  --oe-active: #ececfe;
+
+  /* Text */
+  --oe-fg: #1c1c21;
+  --oe-muted: #6e6e7a;
+  --oe-faint: #a3a3ad;
+
+  /* Lines and accents */
+  --oe-border: #e7e7ea;
+  --oe-border-strong: #d4d4d9;
+  --oe-accent: #5b4fe8;
+  --oe-accent-fg: #ffffff;
+  --oe-highlight: #fdf0a6;
+  --oe-selection: #d9d6fd;
+  --oe-quote-bar: #1c1c21;
+
+  /* Code */
+  --oe-code-bg: #f5f5f6;
+  --oe-code-fg: #3a3a44;
+
+  /* Shape */
+  --oe-radius: 8px;
+  --oe-radius-lg: 14px;
+  --oe-shadow: 0 6px 24px -6px rgb(20 20 40 / 0.16), 0 1px 3px rgb(20 20 40 / 0.08);
+
+  /* Type */
+  --oe-font:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --oe-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --oe-font-size: 15px;
+  --oe-line-height: 1.65;
+
+  /* Layout */
+  --oe-content-width: 680px;
+  --oe-content-padding: 40px 24px 56px;
+}
+
+.oe-root[data-oe-theme="dark"] {
+  color-scheme: dark;
+
+  --oe-bg: #0f0f12;
+  --oe-surface: #19191e;
+  --oe-hover: #25252c;
+  --oe-active: #2b2a52;
+
+  --oe-fg: #ececf1;
+  --oe-muted: #9c9ca8;
+  --oe-faint: #686873;
+
+  --oe-border: #26262d;
+  --oe-border-strong: #3a3a44;
+  --oe-accent: #9d94ff;
+  --oe-accent-fg: #0f0f12;
+  --oe-highlight: #5d5210;
+  --oe-selection: #37346b;
+  --oe-quote-bar: #ececf1;
+
+  --oe-code-bg: #1c1c22;
+  --oe-code-fg: #d3d3dc;
+
+  --oe-shadow: 0 8px 28px -6px rgb(0 0 0 / 0.6), 0 0 0 1px rgb(255 255 255 / 0.06);
+}
