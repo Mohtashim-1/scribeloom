@@ -1,15 +1,16 @@
 import {
+  createStore,
   defineExtension,
   getEditor,
   registerFeature,
   type OpenEditExtension,
   type OpenEditor,
+  type Store,
 } from "@openedit/core";
 import { Extension } from "@tiptap/core";
 import { PluginKey } from "@tiptap/pm/state";
 import { Suggestion, type SuggestionProps } from "@tiptap/suggestion";
 import { pickImageFiles } from "./images";
-import { createStore, type Store } from "./store";
 
 declare module "@openedit/core" {
   interface FeatureRegistry {
@@ -226,13 +227,21 @@ export function slashMenu(options: SlashMenuOptions = {}): OpenEditExtension {
           const engine = this.editor;
           const menu = this.storage;
           const { store } = menu;
-          const all = options.items?.(defaultSlashMenuItems) ?? defaultSlashMenuItems;
+          // Other features (such as AI) add items by exposing `slashItems` in their storage.
+          const contributed = () =>
+            Object.values(
+              engine.storage as unknown as Record<string, { slashItems?: SlashMenuItem[] }>,
+            ).flatMap((storage) => storage?.slashItems ?? []);
+          const all = () => {
+            const items = [...defaultSlashMenuItems, ...contributed()];
+            return options.items?.(items) ?? items;
+          };
 
           // Matching is done here, not through the plugin's `items` option,
           // which resolves asynchronously and would open the menu empty.
           const matching = (query: string) => {
             const editor = getEditor(engine);
-            const available = all.filter(
+            const available = all().filter(
               (item) => !item.requires || (editor?.has(item.requires) ?? false),
             );
             return filterSlashMenuItems(available, query);

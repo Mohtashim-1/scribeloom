@@ -1,0 +1,25 @@
+{
+  "name": "example-nextjs",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev --port 5183",
+    "build": "next build",
+    "start": "next start --port 5183"
+  },
+  "dependencies": {
+    "@openedit/core": "workspace:*",
+    "@openedit/react": "workspace:*",
+    "@openedit/ui": "workspace:*",
+    "next": "^16.4.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "typescript": "~5.9.3"
+  }
+}

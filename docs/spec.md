@@ -100,12 +100,15 @@ openedit/
 ## 6. Features to build
 
 ### 6.1 Basics (use free TipTap extensions where MIT)
+
 Paragraph, headings, bold, italic, underline, strike, code, highlight, text color, text align, links, blockquote, horizontal rule, bullet / ordered / task lists, code blocks with syntax highlighting (lowlight), placeholder, character count, typography, undo / redo, history.
 
 ### 6.2 Rich content
+
 Tables (resize, merge, header row), images (upload hook, paste, drag-drop, resize, caption), embeds (YouTube, generic iframe), math (KaTeX), mentions, emoji, callouts / admonitions, toggle blocks, columns layout.
 
 ### 6.3 UI (our open version of the "Notion-like" experience)
+
 - Fixed toolbar and floating bubble menu
 - `/` slash menu with search and keyboard navigation
 - Block drag handle with a "+" insert button and block actions menu
@@ -114,6 +117,7 @@ Tables (resize, merge, header row), images (upload hook, paste, drag-drop, resiz
 - Command palette (optional)
 
 ### 6.4 Collaboration (`extensions/collab` + `apps/collab-server`)
+
 - Yjs document sync via Hocuspocus
 - Presence: live cursors and selections with user names and colors
 - Awareness list (who is online)
@@ -122,12 +126,14 @@ Tables (resize, merge, header row), images (upload hook, paste, drag-drop, resiz
 - Version history: periodic Yjs snapshots, list, preview, restore
 
 ### 6.5 Comments and suggestions (`extensions/comments`)
+
 - Comment mark anchored to a text range (survives edits and collab)
 - Threads with replies, resolve / reopen
 - Pluggable storage adapter (default: in the Yjs doc; optional REST adapter)
 - Suggestion mode (track changes style: insert / delete marks with accept / reject)
 
 ### 6.6 AI (`packages/ai`)
+
 - Provider-agnostic interface; adapters for OpenAI-compatible APIs (works with Ollama, LM Studio, vLLM, OpenAI, etc.)
 - Actions: continue writing, improve, shorten, expand, fix grammar, translate, summarize, custom prompt
 - Streaming output into the document, with accept / discard preview
@@ -135,11 +141,13 @@ Tables (resize, merge, header row), images (upload hook, paste, drag-drop, resiz
 - User supplies their own endpoint and key; nothing is sent anywhere by default
 
 ### 6.7 Import / export (`packages/export`, `packages/import`)
+
 - Export: Markdown, HTML, JSON, DOCX (`docx` lib), PDF (server-side Puppeteer helper and a client print-to-PDF option)
 - Import: DOCX (`mammoth`), Markdown, HTML
 - Paste cleanup for content from Word / Google Docs
 
 ### 6.8 Extras (later)
+
 Find and replace, table of contents, footnotes, page breaks and print layout, spellcheck integration, RTL support, i18n for UI strings.
 
 ---
@@ -149,42 +157,50 @@ Find and replace, table of contents, footnotes, page breaks and print layout, sp
 Each milestone must end with: passing tests, a working playground demo, and updated docs.
 
 **M0, Scaffold**
+
 - pnpm + Turborepo monorepo, TS config, ESLint, Prettier, Vitest, Changesets
 - `core` with `createEditor()` and `defineExtension()` adapter over TipTap
 - `react` with `<Editor/>` and `useEditor`
 - Playground renders a basic editor
 
 **M1, Default UI**
+
 - Toolbar, bubble menu, slash menu, link popover
 - Tables and images with controls
 - Theme tokens (light/dark), Level 1 and Level 2 customization working
 - Acceptance: a developer can restyle via CSS variables and replace the toolbar via a slot in under 10 lines of code
 
 **M2, Collaboration**
+
 - Yjs + Hocuspocus integration, live cursors, presence list
 - Reference server with Docker
 - IndexedDB offline persistence
 - Acceptance: two browser windows edit the same doc in real time, including after a temporary disconnect
 
 **M3, Comments and suggestions**
+
 - Comment marks, threads, sidebar UI, resolve flow
 - Suggestion mode with accept / reject
 - Acceptance: comments stay anchored correctly while another user edits around them
 
 **M4, Export and import**
+
 - Markdown, HTML, DOCX, PDF export; DOCX and Markdown import
 - Acceptance: round-trip a sample document with headings, lists, tables, and images without data loss
 
 **M5, AI**
+
 - Provider interface, OpenAI-compatible adapter, streaming, AI menu
 - Acceptance: works against a local Ollama endpoint with zero cloud keys
 
 **M6, Block UX and polish**
+
 - Drag handle, block actions, callouts, toggles, columns, math, mentions
 - Level 3 CLI (`add` command copies component source)
 - Accessibility audit, performance pass (large docs), mobile polish
 
 **M7, Docs and release**
+
 - Docs site with getting started, API reference, customization guide (all 3 levels), self-hosting guide
 - Examples: Next.js, Vite, plain HTML
 - First public release under MIT

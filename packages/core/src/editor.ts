@@ -42,6 +42,13 @@ export class OpenEditor {
       content: hasFeature(options, "collab") ? undefined : (options.content ?? ""),
       editable: options.editable ?? true,
       autofocus: options.autofocus ?? false,
+      editorProps: {
+        // The engine already sets role="textbox"; say what kind, and name it.
+        attributes: {
+          "aria-multiline": "true",
+          "aria-label": options.label ?? "Rich text editor",
+        },
+      },
     });
     editors.set(this.engine, this);
     if (options.onUpdate) {
@@ -192,6 +199,14 @@ export class OpenEditor {
     if (!this.isMounted) return null;
     const { from, to } = this.engine.state.selection;
     return posToDOMRect(this.engine.view, from, to);
+  }
+
+  /** Screen rectangle of a document range, or `null` when not mounted. */
+  getRangeRect(from: number, to: number): DOMRect | null {
+    if (!this.isMounted) return null;
+    const size = this.engine.state.doc.content.size;
+    const clamp = (pos: number) => Math.max(0, Math.min(pos, size));
+    return posToDOMRect(this.engine.view, clamp(from), clamp(to));
   }
 
   /**

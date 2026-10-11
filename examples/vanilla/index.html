@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OpenEdit without a framework</title>
+  </head>
+  <body>
+    <main>
+      <!-- "oe-root" carries the theme tokens; "oe-content" gets the document styles. -->
+      <div class="oe-root" data-oe-theme="light">
+        <div class="toolbar" role="toolbar" aria-label="Formatting">
+          <button type="button" data-command="bold" aria-pressed="false"><b>B</b></button>
+          <button type="button" data-command="italic" aria-pressed="false"><i>I</i></button>
+          <button type="button" data-command="bulletList" aria-pressed="false">• List</button>
+          <button type="button" data-command="undo">Undo</button>
+          <button type="button" data-command="redo">Redo</button>
+          <button type="button" id="theme">Dark</button>
+        </div>
+        <div id="editor" class="oe-content"></div>
+      </div>
+      <p id="count"></p>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

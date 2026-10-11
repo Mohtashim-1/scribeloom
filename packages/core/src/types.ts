@@ -30,6 +30,11 @@ export interface EditorOptions {
   editable?: boolean;
   /** Text shown while the document is empty. */
   placeholder?: string;
+  /**
+   * Name announced by screen readers when the editor gets focus.
+   * @defaultValue `"Rich text editor"`
+   */
+  label?: string;
   /** Focus the editor once it is mounted. @defaultValue `false` */
   autofocus?: boolean | "start" | "end";
   /**

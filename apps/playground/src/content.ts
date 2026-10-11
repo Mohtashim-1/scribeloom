@@ -23,14 +23,16 @@ import "@openedit/ui/styles.css";</code></pre>
 
 export const notionContent = `
 <h1>Notes, the quiet way</h1>
-<p>No toolbar here. This layout keeps the page clear and puts every command one keystroke away.</p>
-<h2>How it works</h2>
-<ul>
-  <li><p>Type <code>/</code> to open the command menu, then keep typing to search</p></li>
-  <li><p>Select text to format it or add a link</p></li>
-  <li><p>Use Markdown: <code>#</code> for headings, <code>&gt;</code> for quotes, <code>[ ]</code> for tasks</p></li>
-</ul>
-<blockquote><p>The same editor, a different <code>ui</code> prop. Each part of the interface is a slot you can keep, replace or leave out.</p></blockquote>
+<p>No toolbar here. Hover a block for its handle, type <code>/</code> for commands, or <code>@</code> to mention someone, like <span data-type="mention" data-id="ada" data-label="Ada Lovelace"></span>.</p>
+<div data-callout="info"><p><strong>Tip.</strong> Drag the grip beside a block to move it, or press Ctrl/Cmd + Shift + Up or Down.</p></div>
+<h2>Blocks</h2>
+<div data-columns="2">
+  <div data-column><h3>Left column</h3><p>Columns hold any blocks, side by side. On a narrow screen they stack.</p></div>
+  <div data-column><h3>Right column</h3><ul data-type="taskList"><li data-type="taskItem" data-checked="true"><p>Callouts</p></li><li data-type="taskItem" data-checked="true"><p>Toggles</p></li><li data-type="taskItem" data-checked="false"><p>Your idea here</p></li></ul></div>
+</div>
+<details open><summary>A toggle: click the arrow to fold it</summary><div data-type="detailsContent"><p>Hidden details live here until someone needs them.</p></div></details>
+<div data-callout="warning"><p>Formulas are LaTeX, rendered with KaTeX. Click one to edit it.</p></div>
+<div data-type="block-math" data-latex="e^{i\\pi} + 1 = 0"></div>
 <p></p>
 `;
 

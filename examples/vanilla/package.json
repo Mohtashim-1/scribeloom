@@ -1,0 +1,20 @@
+{
+  "name": "example-vanilla",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5182",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@openedit/core": "workspace:*",
+    "@openedit/themes": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3",
+    "vite": "^8.3.4"
+  }
+}

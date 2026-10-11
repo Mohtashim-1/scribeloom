@@ -22,15 +22,26 @@ const buttonClass =
 
 /**
  * A row of buttons with toolbar semantics: one tab stop, arrow keys to move
- * between buttons. The fixed toolbar and every floating menu are built on it.
+ * between buttons, Escape to return to the document. The fixed toolbar and every floating menu are built on it.
  */
 export const Bar = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<typeof RadixToolbar.Root>>(
-  function Bar({ className, children, ...props }, ref) {
+  function Bar({ className, children, onKeyDown, ...props }, ref) {
+    const { editor } = useEditorContext();
     return (
       <Tooltip.Provider delayDuration={350} skipDelayDuration={200}>
         <RadixToolbar.Root
           ref={ref}
           className={cx("flex items-center gap-0.5 font-oe", className)}
+          onKeyDown={(event) => {
+            onKeyDown?.(event);
+            // Escape on one of the bar's own buttons hands focus back to the
+            // document. Escape inside an open menu arrives here too (menus are
+            // React children rendered elsewhere), but that one only closes the menu.
+            if (event.key === "Escape" && event.currentTarget.contains(event.target as Node)) {
+              event.preventDefault();
+              editor?.focus();
+            }
+          }}
           {...props}
         >
           {children}

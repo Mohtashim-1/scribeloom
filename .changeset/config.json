@@ -7,5 +7,13 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["@openedit/playground", "@openedit/collab-server", "@openedit/e2e"]
+  "ignore": [
+    "@openedit/playground",
+    "@openedit/collab-server",
+    "@openedit/e2e",
+    "@openedit/docs",
+    "example-vite-react",
+    "example-vanilla",
+    "example-nextjs"
+  ]
 }

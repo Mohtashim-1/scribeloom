@@ -12,3 +12,5 @@ export type {
   EditorEventHandler,
   EditorOptions,
 } from "./types";
+export { createStore } from "./store";
+export type { Store } from "./store";

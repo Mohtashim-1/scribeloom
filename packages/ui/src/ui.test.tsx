@@ -1,4 +1,5 @@
 import type { OpenEditor } from "@openedit/core";
+import "@openedit/extensions/collab";
 import { Editor, useEditorContext, type EditorUIProps } from "@openedit/react";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
@@ -15,6 +16,8 @@ import {
 
 beforeAll(() => {
   // jsdom has no layout, so it lacks the observers floating elements rely on.
+  Range.prototype.getClientRects ??= () => [] as unknown as DOMRectList;
+  Range.prototype.getBoundingClientRect ??= () => new DOMRect();
   globalThis.ResizeObserver ??= class {
     observe() {}
     unobserve() {}
@@ -215,6 +218,115 @@ describe("<Presence />", () => {
     cleanup();
     setup(<RichTextEditor />);
     expect(screen.queryByRole("group")).toBeNull();
+  });
+});
+
+describe("<CommentsSidebar />", () => {
+  it("stays out of the way until there is something to show", () => {
+    setup(<RichTextEditor content="<p>Hello world</p>" />);
+    expect(screen.queryByRole("complementary")).toBeNull();
+  });
+
+  it("adds a comment on the selection, then replies and resolves", async () => {
+    const { editor } = setup(
+      <RichTextEditor content="<p>Hello world</p>" comments={{ user: { name: "Ada" } }} />,
+    );
+    act(() => {
+      editor.chain().setTextSelection({ from: 7, to: 12 }).run();
+    });
+    const api = (await import("@openedit/extensions")).getComments(editor)!;
+
+    act(() => api.setDrafting(true));
+    const sidebar = within(screen.getByRole("complementary", { name: "Comments and suggestions" }));
+    fireEvent.change(sidebar.getByLabelText("Comment"), { target: { value: "Which world?" } });
+    fireEvent.click(sidebar.getByRole("button", { name: "Comment" }));
+
+    const thread = within(sidebar.getByRole("article", { name: "Comment on world" }));
+    expect(thread.getByText("Which world?")).toBeTruthy();
+    expect(thread.getByText("Ada")).toBeTruthy();
+
+    fireEvent.change(thread.getByLabelText("Reply"), { target: { value: "This one" } });
+    fireEvent.click(thread.getByRole("button", { name: "Reply" }));
+    expect(thread.getByText("This one")).toBeTruthy();
+
+    fireEvent.click(thread.getByRole("button", { name: /Resolve/ }));
+    expect(sidebar.queryByRole("article")).toBeNull();
+    fireEvent.click(sidebar.getByRole("button", { name: "Show resolved (1)" }));
+    expect(sidebar.getByRole("button", { name: /Reopen/ })).toBeTruthy();
+  });
+
+  it("lists suggestions made in suggesting mode and accepts them", () => {
+    const { editor } = setup(
+      <RichTextEditor content="<p>Hello world</p>" suggestions={{ user: { name: "Ada" } }} />,
+    );
+    const toggle = screen.getByRole("button", { name: "Suggest edits" });
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute("aria-pressed")).toBe("true");
+
+    act(() => {
+      editor.chain().insertContentAt({ from: 7, to: 12 }, "there").run();
+    });
+    const sidebar = within(screen.getByRole("complementary"));
+    expect(sidebar.getByRole("article", { name: "Suggestion" }).textContent).toContain(
+      "Replace world with there",
+    );
+
+    fireEvent.click(sidebar.getByRole("button", { name: "Accept suggestion" }));
+
+    expect(editor.getHTML()).toBe("<p>Hello there</p>");
+    expect(screen.queryByRole("complementary")).toBeNull();
+  });
+});
+
+describe("AI", () => {
+  const provider = {
+    async *stream() {
+      yield "Hi ";
+      yield "there";
+    },
+  };
+
+  it("is not offered unless a provider is configured", () => {
+    setup(<RichTextEditor content="<p>Hello world</p>" />);
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("previews the result and applies it on Accept", async () => {
+    const { editor } = setup(<RichTextEditor content="<p>Hello world</p>" ai={{ provider }} />);
+    const { getAI } = await import("@openedit/ai");
+    act(() => {
+      editor.chain().setTextSelection({ from: 1, to: 12 }).run();
+    });
+
+    act(() => getAI(editor)!.run("improve"));
+    const panel = within(await screen.findByRole("dialog", { name: "AI: Improve writing" }));
+    const accept = await panel.findByRole("button", { name: "Accept" });
+    expect(editor.getHTML()).toBe("<p>Hello world</p>");
+
+    fireEvent.click(accept);
+
+    expect(editor.getHTML()).toBe("<p>Hi there</p>");
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("asks for an instruction, and Escape discards", async () => {
+    const { editor } = setup(<RichTextEditor content="<p>Hello world</p>" ai={{ provider }} />);
+    const { getAI } = await import("@openedit/ai");
+
+    act(() => getAI(editor)!.run("custom"));
+    const dialog = await screen.findByRole("dialog", { name: "AI: Ask AI" });
+    const input = within(dialog).getByLabelText("Instruction");
+    expect(
+      (within(dialog).getByRole("button", { name: "Send" }) as HTMLButtonElement).disabled,
+    ).toBe(true);
+
+    fireEvent.change(input, { target: { value: "Greet them" } });
+    fireEvent.submit(input);
+    await within(dialog).findByRole("button", { name: "Accept" });
+    fireEvent.keyDown(dialog, { key: "Escape" });
+
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(editor.getHTML()).toBe("<p>Hello world</p>");
   });
 });
 

@@ -124,6 +124,22 @@ describe("createEditor", () => {
   });
 });
 
+describe("accessibility", () => {
+  it("exposes the document as a named, multi-line text box", () => {
+    editor = createEditor({ element: document.createElement("div"), label: "Meeting notes" });
+    const dom = editor.element!;
+
+    expect(dom.getAttribute("role")).toBe("textbox");
+    expect(dom.getAttribute("aria-multiline")).toBe("true");
+    expect(dom.getAttribute("aria-label")).toBe("Meeting notes");
+  });
+
+  it("has a default name", () => {
+    editor = createEditor({ element: document.createElement("div") });
+    expect(editor.element!.getAttribute("aria-label")).toBe("Rich text editor");
+  });
+});
+
 describe("basics", () => {
   it("includes highlight, alignment and task lists", () => {
     editor = createEditor({ element: document.createElement("div"), content: "<p>Hello</p>" });

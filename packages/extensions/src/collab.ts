@@ -1,10 +1,12 @@
 import {
+  createStore,
   defineExtension,
   getEditor,
   registerFeature,
   type EditorContent,
   type OpenEditExtension,
   type OpenEditor,
+  type Store,
 } from "@openedit/core";
 import { HocuspocusProvider } from "@hocuspocus/provider";
 import { Extension } from "@tiptap/core";
@@ -13,7 +15,7 @@ import { CollaborationCaret } from "@tiptap/extension-collaboration-caret";
 import { IndexeddbPersistence } from "y-indexeddb";
 import { Awareness } from "y-protocols/awareness";
 import * as Y from "yjs";
-import { createStore, type Store } from "./store";
+import type { Comment, CommentsAdapter, CommentThread } from "./comments-adapters";
 
 declare module "@openedit/core" {
   interface FeatureRegistry {
@@ -97,6 +99,63 @@ export interface Collab {
   connect: () => void;
   /** Goes offline. Edits are kept and merged on the next connect. */
   disconnect: () => void;
+  /** The local user, as shown to others. */
+  user: CollabUser;
+  /** Creates a comments store inside the shared document, so comments sync too. */
+  createCommentsAdapter: () => CommentsAdapter;
+}
+
+/**
+ * Stores comment threads in a Yjs document, so they sync and merge like the
+ * text does. Replies are a shared list, so two people replying at once both
+ * get through.
+ */
+export function yjsCommentsAdapter(doc: Y.Doc, key = "openedit-comments"): CommentsAdapter {
+  const map = doc.getMap<Y.Map<unknown>>(key);
+  const read = (): CommentThread[] =>
+    Array.from(map.values()).map((thread) => ({
+      id: String(thread.get("id")),
+      resolved: thread.get("resolved") === true,
+      createdAt: Number(thread.get("createdAt")),
+      comments: ((thread.get("comments") as Y.Array<Comment> | undefined)?.toArray() ?? []).slice(),
+    }));
+  let snapshot = read();
+  const listeners = new Set<() => void>();
+  const onChange = () => {
+    snapshot = read();
+    listeners.forEach((listener) => listener());
+  };
+  map.observeDeep(onChange);
+
+  return {
+    getThreads: () => snapshot,
+    subscribe: (listener) => {
+      listeners.add(listener);
+      return () => {
+        listeners.delete(listener);
+      };
+    },
+    createThread: (thread) => {
+      const entry = new Y.Map<unknown>();
+      const replies = new Y.Array<Comment>();
+      replies.push(thread.comments);
+      entry.set("id", thread.id);
+      entry.set("resolved", thread.resolved);
+      entry.set("createdAt", thread.createdAt);
+      entry.set("comments", replies);
+      map.set(thread.id, entry);
+    },
+    addComment: (threadId, comment) => {
+      (map.get(threadId)?.get("comments") as Y.Array<Comment> | undefined)?.push([comment]);
+    },
+    setResolved: (threadId, resolved) => {
+      map.get(threadId)?.set("resolved", resolved);
+    },
+    deleteThread: (threadId) => {
+      map.delete(threadId);
+    },
+    destroy: () => map.unobserveDeep(onChange),
+  };
 }
 
 const STORAGE_NAME = "collab";
@@ -155,6 +214,8 @@ function renderCaret(user: Record<string, unknown>): HTMLElement {
   const label = document.createElement("span");
   label.className = "oe-caret-label";
   label.textContent = safeName(user.name);
+  // Decoration, not content: keep it out of what screen readers read as the text.
+  label.setAttribute("aria-hidden", "true");
   caret.append(label);
   return caret;
 }
@@ -247,6 +308,8 @@ export function collab(options: CollabOptions): OpenEditExtension {
             document: doc,
             awareness,
             // Through the socket, which is what holds the connection.
+            user: { name: safeName(options.user.name), color: safeColor(options.user.color) },
+            createCommentsAdapter: () => yjsCommentsAdapter(doc),
             connect: () => void provider?.configuration.websocketProvider.connect(),
             disconnect: () => provider?.configuration.websocketProvider.disconnect(),
           }),

@@ -1,5 +1,5 @@
 import type { OpenEditor } from "@openedit/core";
-import { pickImageFiles } from "@openedit/extensions";
+import { pickImageFiles } from "@openedit/extensions/images";
 import {
   AlignCenter,
   AlignJustify,

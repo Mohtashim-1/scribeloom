@@ -1,0 +1,50 @@
+{
+  "name": "openedit",
+  "version": "0.0.0",
+  "description": "Copy OpenEdit UI components into your project, to edit them as your own.",
+  "keywords": [
+    "rich-text-editor",
+    "wysiwyg",
+    "editor",
+    "prosemirror",
+    "tiptap",
+    "collaboration",
+    "react"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Mohtashim-1/scribeloom#readme",
+  "bugs": "https://github.com/Mohtashim-1/scribeloom/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mohtashim-1/scribeloom.git",
+    "directory": "packages/cli"
+  },
+  "type": "module",
+  "bin": {
+    "openedit": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "registry",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node scripts/build-registry.mjs && tsup",
+    "test": "node scripts/build-registry.mjs && vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@openedit/ui": "workspace:*",
+    "@types/node": "^20.19.43",
+    "tsup": "^8.5.1",
+    "typescript": "~5.9.3",
+    "vitest": "^5.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

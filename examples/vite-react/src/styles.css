@@ -1,0 +1,18 @@
+body {
+  margin: 0;
+  background: #f4f4f2;
+}
+
+main {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+/* Give the editor a frame and a height, so it scrolls inside with the toolbar pinned. */
+.oe-root {
+  height: 70vh;
+  border: 1px solid #e2e2e0;
+  border-radius: 14px;
+  overflow-y: auto;
+}

@@ -1,8 +1,24 @@
 {
   "name": "@openedit/extensions",
   "version": "0.0.0",
-  "description": "Open extensions for OpenEdit: tables, images, the slash menu and real-time collaboration.",
+  "description": "Open extensions for OpenEdit: tables, images, slash menu, collaboration, comments, suggestions, mentions, math and block tools.",
+  "keywords": [
+    "rich-text-editor",
+    "wysiwyg",
+    "editor",
+    "prosemirror",
+    "tiptap",
+    "collaboration",
+    "react"
+  ],
   "license": "MIT",
+  "homepage": "https://github.com/Mohtashim-1/scribeloom#readme",
+  "bugs": "https://github.com/Mohtashim-1/scribeloom/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mohtashim-1/scribeloom.git",
+    "directory": "packages/extensions"
+  },
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -57,10 +73,82 @@
         "types": "./dist/collab.d.cts",
         "default": "./dist/collab.cjs"
       }
+    },
+    "./comments": {
+      "import": {
+        "types": "./dist/comments.d.ts",
+        "default": "./dist/comments.js"
+      },
+      "require": {
+        "types": "./dist/comments.d.cts",
+        "default": "./dist/comments.cjs"
+      }
+    },
+    "./suggestions": {
+      "import": {
+        "types": "./dist/suggestions.d.ts",
+        "default": "./dist/suggestions.js"
+      },
+      "require": {
+        "types": "./dist/suggestions.d.cts",
+        "default": "./dist/suggestions.cjs"
+      }
+    },
+    "./block-handle": {
+      "import": {
+        "types": "./dist/block-handle.d.ts",
+        "default": "./dist/block-handle.js"
+      },
+      "require": {
+        "types": "./dist/block-handle.d.cts",
+        "default": "./dist/block-handle.cjs"
+      }
+    },
+    "./blocks": {
+      "import": {
+        "types": "./dist/blocks.d.ts",
+        "default": "./dist/blocks.js"
+      },
+      "require": {
+        "types": "./dist/blocks.d.cts",
+        "default": "./dist/blocks.cjs"
+      }
+    },
+    "./math": {
+      "import": {
+        "types": "./dist/math.d.ts",
+        "default": "./dist/math.js"
+      },
+      "require": {
+        "types": "./dist/math.d.cts",
+        "default": "./dist/math.cjs"
+      }
+    },
+    "./mentions": {
+      "import": {
+        "types": "./dist/mentions.d.ts",
+        "default": "./dist/mentions.js"
+      },
+      "require": {
+        "types": "./dist/mentions.d.cts",
+        "default": "./dist/mentions.cjs"
+      }
+    },
+    "./toggles": {
+      "import": {
+        "types": "./dist/toggles.d.ts",
+        "default": "./dist/toggles.js"
+      },
+      "require": {
+        "types": "./dist/toggles.d.cts",
+        "default": "./dist/toggles.cjs"
+      }
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsup",
@@ -74,11 +162,15 @@
     "@tiptap/core": "3.31.4",
     "@tiptap/extension-collaboration": "3.31.4",
     "@tiptap/extension-collaboration-caret": "3.31.4",
+    "@tiptap/extension-details": "3.31.4",
     "@tiptap/extension-image": "3.31.4",
+    "@tiptap/extension-mathematics": "3.31.4",
+    "@tiptap/extension-mention": "3.31.4",
     "@tiptap/extension-table": "3.31.4",
     "@tiptap/pm": "3.31.4",
     "@tiptap/suggestion": "3.31.4",
     "@tiptap/y-tiptap": "^3.0.9",
+    "katex": "^0.19.0",
     "y-indexeddb": "^9.0.12",
     "y-protocols": "^1.0.7",
     "yjs": "^13.6.33"
@@ -88,5 +180,8 @@
     "tsup": "^8.5.1",
     "typescript": "~5.9.3",
     "vitest": "^5.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

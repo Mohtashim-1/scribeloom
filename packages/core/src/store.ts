@@ -8,6 +8,7 @@ export interface Store<T> {
   subscribe: (listener: () => void) => () => void;
 }
 
+/** Creates a {@link Store} holding `initial`. */
 export function createStore<T>(initial: T): Store<T> {
   let state = initial;
   const listeners = new Set<() => void>();

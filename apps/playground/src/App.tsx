@@ -1,5 +1,6 @@
-import { collabColors } from "@openedit/extensions";
-import type { EditorTheme, EditorUIProps } from "@openedit/react";
+import { openaiCompatible } from "@openedit/ai";
+import { collabColors } from "@openedit/extensions/collab";
+import { Editor, type EditorTheme, type EditorUIProps } from "@openedit/react";
 import {
   ActionButton,
   ActionMenu,
@@ -12,13 +13,36 @@ import {
   Presence,
   RichTextEditor,
   ThemeToggle,
+  Toolbar,
   useCollab,
+  type EditorAction,
 } from "@openedit/ui";
-import { List, Wifi, WifiOff } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+  FileCode,
+  FileDown,
+  FileText,
+  FileType,
+  FileUp,
+  List,
+  Printer,
+  Wifi,
+  WifiOff,
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { collabContent, customContent, notionContent, simpleContent } from "./content";
 
-const COLLAB_URL: string = import.meta.env.VITE_COLLAB_URL ?? "ws://localhost:1234";
+// Any OpenAI-compatible endpoint. The default is a local Ollama, which needs no key.
+const aiProvider = openaiCompatible({
+  baseUrl: import.meta.env.VITE_AI_URL ?? "http://localhost:11434/v1",
+  model: import.meta.env.VITE_AI_MODEL,
+  apiKey: import.meta.env.VITE_AI_KEY,
+});
+
+// ?collab=ws://host:port picks the collaboration server at run time.
+const COLLAB_URL: string =
+  new URLSearchParams(location.search).get("collab") ??
+  import.meta.env.VITE_COLLAB_URL ??
+  "ws://localhost:1234";
 // Share the page URL with ?room=name to edit a document of your own.
 const COLLAB_ROOM = new URLSearchParams(location.search).get("room") ?? "playground";
 
@@ -50,6 +74,74 @@ function CollabToolbar({ editor }: EditorUIProps) {
         {offline ? <WifiOff size={16} aria-hidden="true" /> : <Wifi size={16} aria-hidden="true" />}
       </BarButton>
     </Bar>
+  );
+}
+
+/*
+ * Export and import, loaded on first use so they stay out of the initial
+ * bundle. Each entry is an ordinary action, so the stock ActionMenu shows it.
+ */
+const fileActions: EditorAction[] = [
+  {
+    id: "export-markdown",
+    label: "Download Markdown",
+    icon: FileText,
+    run: async (editor) => {
+      const { download, toMarkdown } = await import("@openedit/export");
+      download(toMarkdown(editor), "document.md", "text/markdown");
+    },
+  },
+  {
+    id: "export-html",
+    label: "Download HTML",
+    icon: FileCode,
+    run: async (editor) => {
+      const { download, toHtmlDocument } = await import("@openedit/export");
+      download(toHtmlDocument(editor, { title: "Document" }), "document.html", "text/html");
+    },
+  },
+  {
+    id: "export-docx",
+    label: "Download Word (.docx)",
+    icon: FileType,
+    run: async (editor) => {
+      const { download, toDocx, DOCX_MIME_TYPE } = await import("@openedit/export");
+      download(await toDocx(editor), "document.docx", DOCX_MIME_TYPE);
+    },
+  },
+  {
+    id: "export-pdf",
+    label: "Print / save as PDF",
+    icon: Printer,
+    run: async (editor) => {
+      const { printToPdf } = await import("@openedit/export");
+      await printToPdf(editor, { title: "Document" });
+    },
+  },
+  {
+    id: "import-file",
+    label: "Open a file (.docx, .md, .html)",
+    icon: FileUp,
+    run: async (editor) => {
+      const { IMPORT_ACCEPT, importFile, pickFile } = await import("@openedit/import");
+      const file = await pickFile(IMPORT_ACCEPT);
+      if (!file) return;
+      try {
+        const warnings = await importFile(editor, file);
+        if (warnings.length) console.warn("Imported with warnings:", warnings);
+      } catch (error) {
+        alert(error instanceof Error ? error.message : String(error));
+      }
+    },
+  },
+];
+
+/** The default toolbar, with a file menu added to it. */
+function ToolbarWithFileMenu(props: EditorUIProps) {
+  return (
+    <Toolbar {...props}>
+      <ActionMenu editor={props.editor} label="File" icon={FileDown} actions={fileActions} />
+    </Toolbar>
   );
 }
 
@@ -85,6 +177,27 @@ function QuietHeader({ editor }: EditorUIProps) {
   );
 }
 
+const people = [
+  { id: "ada", label: "Ada Lovelace", description: "Analytical Engine" },
+  { id: "alan", label: "Alan Turing", description: "Computing Machinery" },
+  { id: "grace", label: "Grace Hopper", description: "Compilers" },
+  { id: "katherine", label: "Katherine Johnson", description: "Orbital mechanics" },
+  { id: "linus", label: "Linus Torvalds", description: "Kernels" },
+];
+/** A real app would search its users on the server here. */
+const findPeople = (query: string) =>
+  people.filter((person) => person.label.toLowerCase().includes(query.toLowerCase()));
+
+// ?paragraphs=2000 swaps the first demo for a long document, to check performance.
+const stressParagraphs = Number(new URLSearchParams(location.search).get("paragraphs")) || 0;
+// ?ui=off renders the editor with no UI at all, as a baseline to compare against.
+const bare = new URLSearchParams(location.search).get("ui") === "off";
+const stressContent = Array.from(
+  { length: stressParagraphs },
+  (_unused, index) =>
+    `<p>Paragraph ${index + 1}. The quick brown fox jumps over the lazy dog, <strong>again</strong> and <em>again</em>.</p>`,
+).join("");
+
 const demos = [
   { id: "simple", label: "Simple editor" },
   { id: "notion", label: "Notion-like editor" },
@@ -99,6 +212,8 @@ export function App() {
   const [theme, setTheme] = useState<EditorTheme>("system");
   const [editable, setEditable] = useState(true);
   const [html, setHtml] = useState("");
+  const [showHtml, setShowHtml] = useState(false);
+  const latest = useRef<{ getHTML: () => string } | null>(null);
 
   // The page around the editor follows the editor's theme.
   useEffect(() => {
@@ -111,7 +226,11 @@ export function App() {
     onThemeChange: setTheme,
     editable,
     placeholder: "Write something, or type / for commands…",
-    onUpdate: (editor: { getHTML: () => string }) => setHtml(editor.getHTML()),
+    // Serialising on every keystroke is wasteful, so only do it while the output is shown.
+    onUpdate: (editor: { getHTML: () => string }) => {
+      latest.current = editor;
+      if (showHtml) setHtml(editor.getHTML());
+    },
   };
 
   return (
@@ -166,11 +285,24 @@ export function App() {
       )}
 
       <section className="card" aria-label="Editor" hidden={demo === "collab"}>
-        {demo === "simple" && <RichTextEditor key="simple" content={simpleContent} {...shared} />}
+        {demo === "simple" && bare && (
+          <Editor key="bare" features={["basics"]} content={stressContent || simpleContent} />
+        )}
+        {demo === "simple" && !bare && (
+          <RichTextEditor
+            key="simple"
+            content={stressContent || simpleContent}
+            ui={{ Toolbar: ToolbarWithFileMenu }}
+            ai={{ provider: aiProvider }}
+            {...shared}
+          />
+        )}
         {demo === "notion" && (
           <RichTextEditor
             key="notion"
             content={notionContent}
+            features={[...defaultFeatures, "math", "mentions"]}
+            mentions={{ items: findPeople }}
             ui={{ Toolbar: QuietHeader }}
             {...shared}
           />
@@ -195,7 +327,13 @@ export function App() {
           />
           Editable
         </label>
-        <details>
+        <details
+          onToggle={(event) => {
+            const open = event.currentTarget.open;
+            setShowHtml(open);
+            if (open && latest.current) setHtml(latest.current.getHTML());
+          }}
+        >
           <summary>HTML output</summary>
           <pre>{html || "Edit the document to see its HTML."}</pre>
         </details>

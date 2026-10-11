@@ -9,3 +9,8 @@ coverage
 data
 test-results
 playwright-report
+registry
+**/.vitepress/cache
+**/.vitepress/dist
+.next
+next-env.d.ts

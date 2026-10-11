@@ -27,6 +27,16 @@ export interface EditorUI {
   TableMenu?: ComponentType<EditorUIProps>;
   /** Controls for the selected image. */
   ImageMenu?: ComponentType<EditorUIProps>;
+  /** Panel beside the document, e.g. for comments. */
+  Sidebar?: ComponentType<EditorUIProps>;
+  /** Floating panel for AI results. */
+  AIPanel?: ComponentType<EditorUIProps>;
+  /** Menu for `@` mentions. */
+  MentionMenu?: ComponentType<EditorUIProps>;
+  /** Handle beside the hovered block: add, drag, block actions. */
+  BlockHandle?: ComponentType<EditorUIProps>;
+  /** Editor for the formula that was clicked. */
+  MathMenu?: ComponentType<EditorUIProps>;
 }
 
 /**
@@ -115,7 +125,23 @@ function EditorShell({ editor, ui = {}, className, children, ...themeProps }: Ed
     () => ({ editor, root, theme, resolvedTheme, setTheme }),
     [editor, root, theme, resolvedTheme, setTheme],
   );
-  const { Toolbar, BubbleMenu, SlashMenu, TableMenu, ImageMenu } = ui;
+  const { Toolbar, Sidebar, ...floating } = ui;
+  // Rendered in a fixed order so their stacking is predictable.
+  const overlays = (
+    [
+      "BlockHandle",
+      "BubbleMenu",
+      "SlashMenu",
+      "MentionMenu",
+      "TableMenu",
+      "ImageMenu",
+      "MathMenu",
+      "AIPanel",
+    ] as const
+  ).flatMap((name) => {
+    const Overlay = floating[name];
+    return Overlay && editor ? [<Overlay key={name} editor={editor} />] : [];
+  });
 
   return (
     <EditorContext.Provider value={context}>
@@ -125,11 +151,11 @@ function EditorShell({ editor, ui = {}, className, children, ...themeProps }: Ed
         data-oe-theme={resolvedTheme}
       >
         {editor && Toolbar && <Toolbar editor={editor} />}
-        <EditorContent editor={editor} className="oe-content" />
-        {editor && BubbleMenu && <BubbleMenu editor={editor} />}
-        {editor && SlashMenu && <SlashMenu editor={editor} />}
-        {editor && TableMenu && <TableMenu editor={editor} />}
-        {editor && ImageMenu && <ImageMenu editor={editor} />}
+        <div className="oe-body">
+          <EditorContent editor={editor} className="oe-content" />
+          {editor && Sidebar && <Sidebar editor={editor} />}
+        </div>
+        {overlays}
         {children}
       </div>
     </EditorContext.Provider>

@@ -24,6 +24,10 @@
   --oe-highlight: #fdf0a6;
   --oe-selection: #d9d6fd;
   --oe-quote-bar: #1c1c21;
+  --oe-comment: #ffecb0;
+  --oe-comment-active: #ffd766;
+  --oe-insert: #1a7f47;
+  --oe-delete: #c5343c;
 
   /* Code */
   --oe-code-bg: #f5f5f6;
@@ -65,6 +69,10 @@
   --oe-highlight: #5d5210;
   --oe-selection: #37346b;
   --oe-quote-bar: #ececf1;
+  --oe-comment: #4d4014;
+  --oe-comment-active: #7a6418;
+  --oe-insert: #4cc38a;
+  --oe-delete: #ff8589;
 
   --oe-code-bg: #1c1c22;
   --oe-code-fg: #d3d3dc;

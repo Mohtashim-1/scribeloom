@@ -6,10 +6,11 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "test": "playwright test",
+    "e2e": "playwright test",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@openedit/export": "workspace:*",
     "@playwright/test": "^1.64.0",
     "@types/node": "^20.19.43",
     "typescript": "~5.9.3"

@@ -89,6 +89,7 @@ describe("ui slots and theme", () => {
     const { container } = render(<Editor content="<p>Plain</p>" />);
 
     expect(container.querySelector(".oe-root")?.children).toHaveLength(1);
+    expect(container.querySelector(".oe-body")?.children).toHaveLength(1);
     expect(screen.queryByRole("toolbar")).toBeNull();
   });
 

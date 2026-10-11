@@ -40,8 +40,16 @@
   line-height: var(--oe-line-height);
 }
 
-.oe-content {
+.oe-body {
+  display: flex;
   flex: 1;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.oe-content {
+  flex: 1 1 320px;
   min-width: 0;
   overflow-wrap: anywhere;
 }
@@ -350,4 +358,199 @@
 
 .oe-content .tiptap .oe-caret-selection {
   background: color-mix(in srgb, var(--oe-caret-color) 28%, transparent);
+}
+
+/* Comments */
+.oe-content .tiptap .oe-comment {
+  border-bottom: 2px solid var(--oe-comment-active);
+  background: var(--oe-comment);
+}
+
+.oe-content .tiptap .oe-comment.oe-comment-active {
+  background: var(--oe-comment-active);
+}
+
+.oe-content .tiptap .oe-comment.oe-comment-resolved {
+  border-bottom-color: transparent;
+  background: none;
+}
+
+/* Suggestions */
+.oe-content .tiptap ins.oe-suggest-insert {
+  color: var(--oe-insert);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--oe-insert) 55%, transparent);
+  text-underline-offset: 3px;
+}
+
+.oe-content .tiptap del.oe-suggest-delete {
+  color: var(--oe-delete);
+  text-decoration: line-through;
+}
+
+/* AI: the text being worked on, and the preview of the result */
+.oe-content .tiptap .oe-ai-source {
+  background: color-mix(in srgb, var(--oe-accent) 12%, transparent);
+}
+
+.oe-content .tiptap .oe-ai-replace {
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in srgb, var(--oe-fg) 45%, transparent);
+  opacity: 0.6;
+}
+
+.oe-content .tiptap .oe-ai-preview {
+  color: var(--oe-accent);
+  white-space: pre-wrap;
+}
+
+.oe-content .tiptap .oe-ai-preview:not(:empty)::before {
+  content: " ";
+}
+
+/* Callouts */
+.oe-content .tiptap .oe-callout {
+  --oe-callout-color: var(--oe-accent);
+  margin: 1.1em 0;
+  padding: 12px 16px;
+  border: 1px solid color-mix(in srgb, var(--oe-callout-color) 30%, transparent);
+  border-left-width: 3px;
+  border-left-color: var(--oe-callout-color);
+  border-radius: var(--oe-radius);
+  background: color-mix(in srgb, var(--oe-callout-color) 8%, transparent);
+}
+
+.oe-content .tiptap .oe-callout[data-callout="success"] {
+  --oe-callout-color: var(--oe-insert);
+}
+
+.oe-content .tiptap .oe-callout[data-callout="warning"] {
+  --oe-callout-color: #d08700;
+}
+
+.oe-content .tiptap .oe-callout[data-callout="danger"] {
+  --oe-callout-color: var(--oe-delete);
+}
+
+.oe-content .tiptap :is(.oe-callout, .oe-column, [data-type="detailsContent"]) > :first-child {
+  margin-top: 0;
+}
+
+.oe-content .tiptap :is(.oe-callout, .oe-column, [data-type="detailsContent"]) > :last-child {
+  margin-bottom: 0;
+}
+
+/* Columns */
+.oe-content .tiptap .oe-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin: 1.1em 0;
+}
+
+.oe-content .tiptap .oe-columns[data-columns="3"] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.oe-content .tiptap .oe-columns[data-columns="4"] {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.oe-content .tiptap[contenteditable="true"] .oe-column {
+  border-radius: var(--oe-radius);
+  outline: 1px dashed var(--oe-border-strong);
+  outline-offset: 6px;
+}
+
+@media (max-width: 640px) {
+  .oe-content .tiptap .oe-columns[data-columns] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Toggles */
+.oe-content .tiptap .oe-toggle {
+  display: flex;
+  gap: 4px;
+  margin: 0.85em 0;
+}
+
+.oe-content .tiptap .oe-toggle > button {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: calc(1em * var(--oe-line-height));
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--oe-muted);
+  cursor: pointer;
+}
+
+.oe-content .tiptap .oe-toggle > button:hover {
+  background: var(--oe-hover);
+}
+
+.oe-content .tiptap .oe-toggle > button::before {
+  content: "";
+  border: 5px solid transparent;
+  border-left: 7px solid currentColor;
+  border-right: 0;
+  transition: rotate 0.12s;
+}
+
+.oe-content .tiptap .oe-toggle.is-open > button::before {
+  rotate: 90deg;
+}
+
+.oe-content .tiptap .oe-toggle > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.oe-content .tiptap .oe-toggle summary {
+  display: block;
+  font-weight: 600;
+}
+
+.oe-content .tiptap .oe-toggle summary::-webkit-details-marker {
+  display: none;
+}
+
+.oe-content .tiptap .oe-toggle [data-type="detailsContent"] {
+  margin-top: 0.4em;
+}
+
+.oe-content .tiptap .oe-toggle [data-type="detailsContent"][hidden] {
+  display: none;
+}
+
+/* Mentions */
+.oe-content .tiptap .oe-mention {
+  padding: 0.05em 0.3em;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--oe-accent) 13%, transparent);
+  color: var(--oe-accent);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Math */
+.oe-content .tiptap :is([data-type="inline-math"], [data-type="block-math"]) {
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.oe-content .tiptap [data-type="block-math"] {
+  margin: 1.1em 0;
+  padding: 10px;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.oe-content .tiptap :is([data-type="inline-math"], [data-type="block-math"]):hover {
+  background: var(--oe-hover);
 }

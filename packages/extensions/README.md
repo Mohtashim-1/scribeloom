@@ -1,14 +1,22 @@
 # @openedit/extensions
 
-Open extensions for OpenEdit, built from scratch on MIT libraries. Each one is
-headless: it adds behaviour and commands, and `@openedit/ui` (or your own
-components) provides the interface.
+Open features for OpenEdit, built from scratch on MIT libraries. Each is
+headless: it adds behaviour, commands and state, and `@openedit/ui` (or your
+own components) provides the interface.
 
-| Feature name   | Import                             | What it adds                                         |
-| -------------- | ---------------------------------- | ---------------------------------------------------- |
-| `"tables"`     | `@openedit/extensions/tables`      | Tables: header row, merge / split, column resizing   |
-| `"images"`     | `@openedit/extensions/images`      | Images: file picker, paste, drag-and-drop, resizing  |
-| `"slash-menu"` | `@openedit/extensions/slash-menu`  | The `/` command menu: query, filtering, keyboard nav |
+| Feature name   | Import                              | What it adds |
+| -------------- | ----------------------------------- | ------------ |
+| `tables`       | `@openedit/extensions/tables`       | Tables: header row, merge / split, column resizing |
+| `images`       | `@openedit/extensions/images`       | Images: file picker, paste, drop, resizing |
+| `slash-menu`   | `@openedit/extensions/slash-menu`   | The `/` command menu |
+| `comments`     | `@openedit/extensions/comments`     | Comment threads anchored to text |
+| `suggestions`  | `@openedit/extensions/suggestions`  | Suggesting mode with accept and reject |
+| `callouts`, `columns` | `@openedit/extensions/blocks` | Note boxes; blocks side by side |
+| `toggles`      | `@openedit/extensions/toggles`      | Collapsible sections |
+| `block-handle` | `@openedit/extensions/block-handle` | Add, drag, move and delete blocks |
+| `mentions`     | `@openedit/extensions/mentions`     | `@` mentions |
+| `math`         | `@openedit/extensions/math`         | LaTeX formulas (KaTeX) |
+| `collab`       | `@openedit/extensions/collab`       | Real-time collaboration, cursors, presence, offline |
 
 ## Usage
 
@@ -21,68 +29,51 @@ import "@openedit/extensions/tables";
 createEditor({ features: ["basics", "tables"] });
 ```
 
-`import "@openedit/extensions"` registers all three. Use the per-feature
-imports to keep the ones you do not use out of your bundle. To pass options,
-use the factory instead of the name:
+Use the per-feature imports. `import "@openedit/extensions"` registers all of
+them, and brings all of them (including collaboration and math) into your
+bundle.
+
+To pass options, use the factory instead of the name:
 
 ```ts
 import { images } from "@openedit/extensions/images";
 
-createEditor({
-  features: [
-    "basics",
-    images({
-      upload: async (file) => {
-        const body = new FormData();
-        body.append("file", file);
-        const response = await fetch("/api/upload", { method: "POST", body });
-        return (await response.json()).url;
-      },
-      maxFileSize: 5 * 1024 * 1024,
-      onError: (error) => toast(error.message),
-    }),
-  ],
-});
+createEditor({ features: ["basics", images({ upload: uploadToMyServer })] });
 ```
 
-## Images
+## Building your own UI
 
-Without an `upload` function, images are embedded in the document as data
-URLs. That works with no server, but makes documents large; supply `upload`
-for real use. Only `image/*` files up to `maxFileSize` (10 MB by default) are
-accepted; anything else goes to `onError`.
-
-- `insertImageFiles(editor, files, position?)` uploads and inserts files.
-- `pickImageFiles(editor)` opens the browser's file picker first.
-
-## Slash menu
-
-`getSlashMenu(editor)` returns `{ store, select, setSelectedIndex }`, or `null`
-if the feature is off. `store` has `getState()` and `subscribe()`, so it plugs
-into React's `useSyncExternalStore`. The state is
-`{ open, query, items, selectedIndex, getRect }`.
-
-Change the items with the `items` option:
+Each interactive feature has a getter that returns a handle with a `store`
+(`getState()`, `subscribe()`) and methods, or `null` when the feature is off:
+`getSlashMenu`, `getMentions`, `getComments`, `getSuggestions`, `getCollab`,
+`getBlockHandle`, `getMath`.
 
 ```ts
-import { slashMenu } from "@openedit/extensions/slash-menu";
+import { getComments } from "@openedit/extensions/comments";
 
-slashMenu({
-  items: (defaults) => [
-    ...defaults.filter((item) => item.id !== "image"),
-    {
-      id: "date",
-      title: "Today's date",
-      group: "Insert",
-      keywords: ["now"],
-      run: (editor) => editor.chain().focus().insertContent(new Date().toDateString()).run(),
-    },
-  ],
-});
+const comments = getComments(editor);
+comments?.addThread("Is this right?");
+comments?.store.subscribe(() => render(comments.store.getState().threads));
 ```
 
-Items with `requires` (for example `"table"`) are hidden when that extension
-is not enabled.
+## Things to know
+
+- **Images** are embedded as data URLs unless you supply `upload`. That needs
+  no server but makes documents large.
+- **Collaboration** needs a server; see `apps/collab-server`. Names and
+  colours of other people come from their browsers: they are validated, but
+  treat them as user input.
+- **Comments** are stored in the shared document when collaboration is on,
+  otherwise in memory. Use `memoryCommentsAdapter({ onChange })` or
+  `restCommentsAdapter({ url })` to keep them.
+- **Suggestions** track typing, deleting and replacing text within a block.
+  Structural and formatting changes are applied directly.
+- **Math** needs KaTeX's stylesheet: `import "katex/dist/katex.min.css"`.
+
+Full documentation: [features](../../apps/docs/guide/features.md),
+[collaboration](../../apps/docs/guide/collaboration.md),
+[comments and suggestions](../../apps/docs/guide/comments.md) and the
+[reference](../../apps/docs/reference/extensions.md).
 
 ## License
 

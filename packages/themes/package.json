@@ -2,7 +2,23 @@
   "name": "@openedit/themes",
   "version": "0.0.0",
   "description": "CSS variable tokens, light and dark presets, and document styles for OpenEdit.",
+  "keywords": [
+    "rich-text-editor",
+    "wysiwyg",
+    "editor",
+    "prosemirror",
+    "tiptap",
+    "collaboration",
+    "react"
+  ],
   "license": "MIT",
+  "homepage": "https://github.com/Mohtashim-1/scribeloom#readme",
+  "bugs": "https://github.com/Mohtashim-1/scribeloom/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mohtashim-1/scribeloom.git",
+    "directory": "packages/themes"
+  },
   "type": "module",
   "sideEffects": [
     "*.css"
@@ -13,6 +29,11 @@
     "./content.css": "./src/content.css"
   },
   "files": [
-    "src"
-  ]
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

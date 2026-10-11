@@ -1,5 +1,5 @@
 {
-  "name": "openedit",
+  "name": "openedit-monorepo",
   "private": true,
   "type": "module",
   "license": "MIT",
@@ -9,26 +9,30 @@
   },
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --filter=!./examples/* --concurrency=20",
     "test": "turbo run test",
-    "e2e": "turbo run build && pnpm --filter @openedit/e2e test",
+    "e2e": "turbo run build && pnpm --filter @openedit/e2e e2e",
     "typecheck": "turbo run typecheck",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "turbo run build && changeset publish"
+    "release": "turbo run build && changeset publish",
+    "size": "node scripts/bundle-size.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^3.0.3",
     "@eslint/js": "^10.0.1",
+    "@types/node": "^20.19.43",
+    "@vitest/coverage-v8": "^5.0.3",
+    "esbuild": "^0.28.2",
     "eslint": "^10.12.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.13.0",
     "prettier": "^3.9.10",
     "turbo": "^2.11.7",
-    "typescript": "~5.9.3",
+    "typescript": "~5.9",
     "typescript-eslint": "^8.71.1"
   }
 }

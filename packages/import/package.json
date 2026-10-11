@@ -1,0 +1,107 @@
+{
+  "name": "@openedit/import",
+  "version": "0.0.0",
+  "description": "Import Markdown, HTML and DOCX into OpenEdit, and clean up pasted content.",
+  "keywords": [
+    "rich-text-editor",
+    "wysiwyg",
+    "editor",
+    "prosemirror",
+    "tiptap",
+    "collaboration",
+    "react"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Mohtashim-1/scribeloom#readme",
+  "bugs": "https://github.com/Mohtashim-1/scribeloom/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mohtashim-1/scribeloom.git",
+    "directory": "packages/import"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./markdown": {
+      "import": {
+        "types": "./dist/markdown.d.ts",
+        "default": "./dist/markdown.js"
+      },
+      "require": {
+        "types": "./dist/markdown.d.cts",
+        "default": "./dist/markdown.cjs"
+      }
+    },
+    "./html": {
+      "import": {
+        "types": "./dist/html.d.ts",
+        "default": "./dist/html.js"
+      },
+      "require": {
+        "types": "./dist/html.d.cts",
+        "default": "./dist/html.cjs"
+      }
+    },
+    "./docx": {
+      "import": {
+        "types": "./dist/docx.d.ts",
+        "default": "./dist/docx.js"
+      },
+      "require": {
+        "types": "./dist/docx.d.cts",
+        "default": "./dist/docx.cjs"
+      }
+    },
+    "./paste": {
+      "import": {
+        "types": "./dist/paste.d.ts",
+        "default": "./dist/paste.js"
+      },
+      "require": {
+        "types": "./dist/paste.d.cts",
+        "default": "./dist/paste.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@openedit/core": "workspace:*",
+    "@tiptap/core": "3.31.4",
+    "@tiptap/pm": "3.31.4",
+    "mammoth": "^1.13.0",
+    "marked": "^18.1.0"
+  },
+  "devDependencies": {
+    "@openedit/export": "workspace:*",
+    "@openedit/extensions": "workspace:*",
+    "jsdom": "^29.1.1",
+    "tsup": "^8.5.1",
+    "typescript": "~5.9.3",
+    "vitest": "^5.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

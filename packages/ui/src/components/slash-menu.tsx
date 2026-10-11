@@ -15,8 +15,8 @@ import {
   TextQuote,
   type LucideIcon,
 } from "lucide-react";
-import { Fragment, useEffect, useRef } from "react";
-import { useAnchoredPosition, useSlashMenu } from "../hooks";
+import { Fragment, useEffect, useId, useRef } from "react";
+import { useActiveDescendant, useAnchoredPosition, useSlashMenu } from "../hooks";
 import { cx } from "../lib/cx";
 import { panelClass } from "./bar";
 
@@ -43,6 +43,14 @@ const icons: Record<string, LucideIcon> = {
 export function SlashMenu({ editor }: EditorUIProps) {
   const { menu, state } = useSlashMenu(editor);
   const selected = useRef<HTMLButtonElement>(null);
+  const listId = useId();
+  const optionId = (index: number) => `${listId}-${index}`;
+  useActiveDescendant(
+    editor,
+    state.open,
+    listId,
+    state.items.length ? optionId(state.selectedIndex) : undefined,
+  );
   const position = useAnchoredPosition({
     editor,
     open: state.open,
@@ -59,6 +67,7 @@ export function SlashMenu({ editor }: EditorUIProps) {
     <div
       ref={position.setFloating}
       style={position.style}
+      id={listId}
       role="listbox"
       aria-label="Insert block"
       className={cx(panelClass, "max-h-80 w-64 overflow-y-auto p-1")}
@@ -73,13 +82,14 @@ export function SlashMenu({ editor }: EditorUIProps) {
         return (
           <Fragment key={item.id}>
             {startsGroup && (
-              <div className="px-2 pt-2 pb-1 text-[11px] font-medium tracking-wide text-oe-faint uppercase">
+              <div className="px-2 pt-2 pb-1 text-[11px] font-medium tracking-wide text-oe-muted uppercase">
                 {item.group}
               </div>
             )}
             <button
               ref={isSelected ? selected : undefined}
               type="button"
+              id={optionId(index)}
               role="option"
               aria-selected={isSelected}
               tabIndex={-1}

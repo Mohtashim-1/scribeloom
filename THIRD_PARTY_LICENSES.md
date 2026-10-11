@@ -11,32 +11,39 @@ Allowed licenses for anything we ship: MIT, Apache-2.0, ISC, BSD (including 0BSD
 All TipTap packages are pinned to an exact version (currently `3.31.4`). If
 their license ever changes, we stay on the last MIT release.
 
-| Package                                 | Used by                       | License |
-| --------------------------------------- | ----------------------------- | ------- |
-| `@tiptap/core`                          | `core`, `extensions`          | MIT     |
-| `@tiptap/pm`                            | `core`, `extensions`          | MIT     |
-| `@tiptap/starter-kit`                   | `core`                        | MIT     |
-| `@tiptap/extensions`                    | `core`                        | MIT     |
-| `@tiptap/extension-highlight`           | `core`                        | MIT     |
-| `@tiptap/extension-text-align`          | `core`                        | MIT     |
-| `@tiptap/extension-list`                | `core`                        | MIT     |
-| `@tiptap/extension-table`               | `extensions`                  | MIT     |
-| `@tiptap/extension-image`               | `extensions`                  | MIT     |
-| `@tiptap/suggestion`                    | `extensions`                  | MIT     |
-| `@tiptap/extension-collaboration`       | `extensions`                  | MIT     |
-| `@tiptap/extension-collaboration-caret` | `extensions`                  | MIT     |
-| `@tiptap/y-tiptap`                      | `extensions`                  | MIT     |
-| `yjs`                                   | `extensions`, `collab-server` | MIT     |
-| `y-protocols`                           | `extensions`                  | MIT     |
-| `y-indexeddb`                           | `extensions`                  | MIT     |
-| `@hocuspocus/provider`                  | `extensions`                  | MIT     |
-| `@hocuspocus/server`                    | `collab-server`               | MIT     |
-| `@hocuspocus/extension-database`        | `collab-server`               | MIT     |
-| `better-sqlite3`                        | `collab-server`               | MIT     |
-| `pg` (optional)                         | `collab-server`               | MIT     |
-| `radix-ui`                              | `ui`                          | MIT     |
-| `@floating-ui/react-dom`                | `ui`                          | MIT     |
-| `lucide-react`                          | `ui`                          | ISC     |
+| Package                                 | Used by                       | License      |
+| --------------------------------------- | ----------------------------- | ------------ |
+| `@tiptap/core`                          | `core`, `extensions`          | MIT          |
+| `@tiptap/pm`                            | `core`, `extensions`          | MIT          |
+| `@tiptap/starter-kit`                   | `core`                        | MIT          |
+| `@tiptap/extensions`                    | `core`                        | MIT          |
+| `@tiptap/extension-highlight`           | `core`                        | MIT          |
+| `@tiptap/extension-text-align`          | `core`                        | MIT          |
+| `@tiptap/extension-list`                | `core`                        | MIT          |
+| `@tiptap/extension-table`               | `extensions`                  | MIT          |
+| `@tiptap/extension-image`               | `extensions`                  | MIT          |
+| `@tiptap/suggestion`                    | `extensions`                  | MIT          |
+| `@tiptap/extension-collaboration`       | `extensions`                  | MIT          |
+| `@tiptap/extension-collaboration-caret` | `extensions`                  | MIT          |
+| `@tiptap/y-tiptap`                      | `extensions`                  | MIT          |
+| `yjs`                                   | `extensions`, `collab-server` | MIT          |
+| `y-protocols`                           | `extensions`                  | MIT          |
+| `y-indexeddb`                           | `extensions`                  | MIT          |
+| `@hocuspocus/provider`                  | `extensions`                  | MIT          |
+| `@hocuspocus/server`                    | `collab-server`               | MIT          |
+| `@hocuspocus/extension-database`        | `collab-server`               | MIT          |
+| `better-sqlite3`                        | `collab-server`               | MIT          |
+| `pg` (optional)                         | `collab-server`               | MIT          |
+| `@tiptap/extension-details`             | `extensions`                  | MIT          |
+| `@tiptap/extension-mathematics`         | `extensions`                  | MIT          |
+| `@tiptap/extension-mention`             | `extensions`                  | MIT          |
+| `katex`                                 | `extensions`                  | MIT          |
+| `docx`                                  | `export`                      | MIT          |
+| `marked`                                | `import`                      | MIT          |
+| `mammoth`                               | `import`                      | BSD-2-Clause |
+| `radix-ui`                              | `ui`                          | MIT          |
+| `@floating-ui/react-dom`                | `ui`                          | MIT          |
+| `lucide-react`                          | `ui`                          | ISC          |
 
 "Used by" names the `@openedit/*` package (`collab-server` is the app in
 `apps/`). `react` and `react-dom` (MIT) are
@@ -81,6 +88,18 @@ All MIT unless noted:
   `pg-connection-string`, `pg-cloudflare`, `pgpass`, `postgres-array`,
   `postgres-bytea`, `postgres-date`, `postgres-interval`, `xtend`, and
   `pg-int8`, `split2` (ISC)
+
+- Via `docx`: `jszip` (MIT OR GPL-3.0-or-later; used under MIT), `pako` (MIT
+  AND Zlib), `xml`, `xml-js`, `nanoid`, `hash.js`, and `sax` (BlueOak-1.0.0)
+- Via `mammoth`: `@xmldom/xmldom`, `argparse`, `base64-js`, `bluebird`,
+  `jszip`, `underscore`, `xmlbuilder`, `path-is-absolute`, plus `lop`,
+  `dingbat-to-unicode`, `duck` (BSD-2-Clause) and `sprintf-js` (BSD-3-Clause)
+
+**One licence outside the allowed list:** `sax`, pulled in by `docx` (through
+`xml-js`), is under BlueOak-1.0.0. That is a permissive licence in the same
+spirit as MIT, but it is not one of MIT / Apache-2.0 / ISC / BSD. It ships to
+anyone who uses `@openedit/export`. Decide whether that is acceptable; the
+alternative is a different Word-writing library.
 
 The collaboration packages are the open-source ones. Nothing here depends on
 TipTap's hosted collaboration service or any paid package; the server is
@@ -131,16 +150,23 @@ SOFTWARE.
 | `vitest`                           | MIT        |
 | `jsdom`                            | MIT        |
 | `@testing-library/react`           | MIT        |
+| `tailwindcss`, `@tailwindcss/cli`  | MIT        |
+| `@playwright/test`                 | Apache-2.0 |
+| `vitepress` (docs site)            | MIT        |
+| `next` (example app)               | MIT        |
+| `@vitest/coverage-v8`, `esbuild`   | MIT        |
+| `ws`, `@types/*`                   | MIT        |
 | `@types/react`, `@types/react-dom` | MIT        |
 
 Transitive development dependencies are MIT, ISC, Apache-2.0 or BSD, except
 the following, which are build and test tooling only and never part of a
 published package:
 
-| Package                                                               | License       |
-| --------------------------------------------------------------------- | ------------- |
-| `lightningcss` (via `vite`)                                           | MPL-2.0       |
-| `caniuse-lite`                                                        | CC-BY-4.0     |
-| `mdn-data`                                                            | CC0-1.0       |
-| `lru-cache`, `minimatch`                                              | BlueOak-1.0.0 |
-| `@csstools/color-helpers`, `@csstools/css-syntax-patches-for-csstree` | MIT-0         |
+| Package                                                               | License           |
+| --------------------------------------------------------------------- | ----------------- |
+| `lightningcss` (via `vite`)                                           | MPL-2.0           |
+| `@img/sharp-libvips-*` (via `next`, used by the Next.js example only) | LGPL-3.0-or-later |
+| `caniuse-lite`                                                        | CC-BY-4.0         |
+| `mdn-data`                                                            | CC0-1.0           |
+| `lru-cache`, `minimatch`                                              | BlueOak-1.0.0     |
+| `@csstools/color-helpers`, `@csstools/css-syntax-patches-for-csstree` | MIT-0             |

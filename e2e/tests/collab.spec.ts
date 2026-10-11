@@ -1,10 +1,11 @@
+import { COLLAB_URL } from "../playwright.config";
 import { expect, test, type Browser, type Page } from "@playwright/test";
 
 /** Opens the collaboration demo in its own window, in the given room. */
 async function openWindow(browser: Browser, room: string) {
   const context = await browser.newContext();
   const page = await context.newPage();
-  await page.goto(`/?room=${room}`);
+  await page.goto(`/?room=${room}&collab=${COLLAB_URL}`);
   await page.getByRole("tab", { name: "Collaboration" }).click();
   // Each window shows two editors; these tests drive the first one.
   const pane = page.locator(".card").first();

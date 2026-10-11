@@ -73,24 +73,55 @@ function MyToolbar({ editor }: EditorUIProps) {
 
 ### Level 3: own the code
 
-Copying component source into your project with `npx openedit add` arrives in
-a later milestone.
+```sh
+npx openedit add toolbar
+```
 
-## Building blocks
+copies the component's source (and what it imports) into your project. See
+the `openedit` CLI.
 
-| Export                                    | What it is                                                   |
-| ----------------------------------------- | ------------------------------------------------------------ |
-| `RichTextEditor`                          | The batteries-included editor                                |
-| `DefaultUI`, `defaultFeatures`            | The slot set and feature list it uses                        |
-| `Toolbar`, `BubbleMenu`, `SlashMenu`, `TableMenu`, `ImageMenu` | The default slot components             |
-| `Bar`, `BarButton`, `BarSeparator`        | A toolbar row (arrow-key navigation), its buttons, a divider |
-| `actions`, `ActionButton`, `ActionMenu`   | Built-in actions; a button or dropdown bound to them         |
-| `LinkButton`, `LinkEditor`, `ThemeToggle` | Link popover, its form, and the light / dark switch          |
-| `useActionState`, `useAnchoredPosition`, `useSlashMenu`, ... | The headless hooks the components use     |
-| `normalizeUrl`, `applyLink`, `removeLink` | Link helpers                                                 |
+## Features and their controls
+
+`RichTextEditor` enables tables, images, the slash menu, comments,
+suggestions, callouts, columns, toggles and the block handle. It also turns
+on `collab`, `ai` and `mentions` when you pass their settings:
+
+```tsx
+import "@openedit/extensions/collab"; // collaboration is opt-in: import it once
+
+<RichTextEditor
+  collab={{ url: "ws://localhost:1234", room: "doc-1", user: { name: "Ada", color: "#3e63dd" } }}
+  ai={{ provider }}
+  mentions={{ items: searchUsers }}
+/>;
+```
+
+Collaboration and math are larger, so this package does not import them.
+Import `@openedit/extensions/collab` or `@openedit/extensions/math` yourself
+(and add `"math"` to `features`).
 
 Controls for a feature that is not enabled hide themselves, so the same
 toolbar works with any feature list.
+
+## Building blocks
+
+| Export | What it is |
+| ------ | ---------- |
+| `RichTextEditor`, `DefaultUI`, `defaultFeatures` | The batteries-included editor and what it is made of |
+| `Toolbar`, `BubbleMenu`, `SlashMenu`, `TableMenu`, `ImageMenu` | Default slot components |
+| `CommentsSidebar`, `BlockHandle`, `MentionMenu`, `MathMenu`, `AIPanel` | More default slot components |
+| `Bar`, `BarButton`, `BarSeparator` | A toolbar row (arrow-key navigation), its buttons, a divider |
+| `actions`, `ActionButton`, `ActionMenu` | Built-in actions; a button or dropdown bound to them |
+| `LinkButton`, `LinkEditor`, `ThemeToggle`, `Presence`, `AIMenu` | Single-purpose parts |
+| `CommentButton`, `SuggestingToggle` | Review controls |
+| `useActionState`, `useAnchoredPosition`, `useSlashMenu`, ... | The headless hooks the components use |
+| `normalizeUrl`, `applyLink`, `removeLink` | Link helpers |
+
+## Keyboard
+
+Alt+F10 moves focus from the document to the selection menu or the toolbar;
+the arrow keys move between buttons; Escape returns to the document. See the
+[accessibility guide](../../apps/docs/guide/accessibility.md).
 
 ## Good to know
 

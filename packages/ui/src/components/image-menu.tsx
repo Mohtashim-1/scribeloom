@@ -1,8 +1,8 @@
-import { pickImageFiles } from "@openedit/extensions";
+import { pickImageFiles } from "@openedit/extensions/images";
 import type { EditorUIProps } from "@openedit/react";
 import { useEditorState } from "@openedit/react";
 import { ImageUp, Trash2 } from "lucide-react";
-import { useAnchoredPosition, useFocusWithin } from "../hooks";
+import { useAnchoredPosition, useEditorFocus, useFocusWithin } from "../hooks";
 import { cx } from "../lib/cx";
 import { Bar, BarButton, panelClass } from "./bar";
 
@@ -14,9 +14,9 @@ export function ImageMenu({ editor }: EditorUIProps) {
   const focus = useFocusWithin();
   const state = useEditorState(editor, (e) => ({
     selected: e.isEditable && e.selectedNodeName === "image",
-    focused: e.isFocused,
   }));
-  const open = !!state?.selected && (state.focused || focus.focused);
+  const editorFocused = useEditorFocus(editor);
+  const open = !!state?.selected && (editorFocused || focus.focused);
   const position = useAnchoredPosition({
     editor,
     open,

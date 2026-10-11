@@ -13,7 +13,7 @@ import {
   Trash2,
   type LucideIcon,
 } from "lucide-react";
-import { useAnchoredPosition, useFocusWithin } from "../hooks";
+import { useAnchoredPosition, useEditorFocus, useFocusWithin } from "../hooks";
 import { cx } from "../lib/cx";
 import { Bar, BarButton, BarSeparator, panelClass } from "./bar";
 
@@ -105,12 +105,12 @@ export function TableMenu({ editor }: EditorUIProps) {
     const inTable = e.has("table") && e.isEditable && e.isActive("table");
     return {
       inTable,
-      focused: e.isFocused,
       // One character per command, so the comparison between transactions is cheap.
       enabled: inTable ? commands.map((command) => (command.can(e) ? "1" : "0")).join("") : "",
     };
   });
-  const open = !!state?.inTable && (state.focused || focus.focused);
+  const editorFocused = useEditorFocus(editor);
+  const open = !!state?.inTable && (editorFocused || focus.focused);
   const position = useAnchoredPosition({
     editor,
     open,
